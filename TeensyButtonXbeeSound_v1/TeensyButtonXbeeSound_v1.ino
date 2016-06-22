@@ -7,8 +7,6 @@
 //  - OshPark boards : https://oshpark.com/shared_projects/lgvLRQTg
 
 
-
-
 #include <Audio.h>
 #include <Wire.h>
 #include <SPI.h>
