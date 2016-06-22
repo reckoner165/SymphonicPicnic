@@ -1,3 +1,14 @@
+// Symphonic Picnic for PlayTimesSquared
+// Project by terry li, sumanth srinivasan, zach dorsett and adelle lin
+// code created by adelle lin and matt pinner
+//
+// Using:
+//  - Audio System Design Tool for Teensy : http://www.pjrc.com/teensy/td_libs_Audio.html
+//  - OshPark boards : https://oshpark.com/shared_projects/lgvLRQTg
+
+
+
+
 #include <Audio.h>
 #include <Wire.h>
 #include <SPI.h>
