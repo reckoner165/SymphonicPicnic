@@ -55,6 +55,20 @@ AudioConnection          patchCord19(mixer3, 0, i2s1, 1);
 AudioControlSGTL5000     sgtl5000_1;     //xy=667,550
 // GUItool: end automatically generated code
 
+AudioPlaySdWav sdWavArray[] = {
+  playSdWav1,
+  playSdWav2,
+  playSdWav3,
+  playSdWav4,
+  playSdWav5,
+  playSdWav6,
+  playSdWav7,
+  playSdWav8,
+  playSdWav9,
+  playSdWav10,
+  playSdWav11,
+  playSdWav12
+};
 // button debounce lib
 #include <Bounce2.h>
 
@@ -85,7 +99,7 @@ char* soundFileName[] =
 //
 const int buttonDebounceMs = 50;
 const int buttonCount = 3;
-int buttonPin[] = {2, 3, 4};
+int buttonPin[] = {3, 4, 5};
 Bounce button[buttonCount];
 
 //
@@ -159,6 +173,11 @@ void setupAudio() {
 }
 
 void loop() {
+
+   if (playSdWav13.isPlaying() == false) {
+    Serial.println("Start playing 1");
+    playSdWav13.play("BackTr2.wav");
+  } 
   triggerXbeeActions();
   triggerButtonActions();
   triggerKeyboardActions();
@@ -243,7 +262,6 @@ void playSound(char command) {
   char* soundFileName = parseSoundCommand(command);
   log("Got file : " + String(soundFileName));
   playfile(soundFileName);
-
   return;
 
 }
@@ -268,6 +286,7 @@ char* parseSoundCommand(char command) {
   if (sound == -1) {
     //if error
     return soundFileName[errorSound];
+    
   }
 
   return soundFileName[sound];
@@ -284,16 +303,18 @@ void log (String message) {
 }
 
 
-// plays given filename
+
 void playfile(char * filename) {
 
   // i did it!
   log("-device:" + String(getMushroom()) + " playing: " + String(filename));
   playSdWav1.play(filename);
 
+
   return;
 
 }
+
 
 
 
