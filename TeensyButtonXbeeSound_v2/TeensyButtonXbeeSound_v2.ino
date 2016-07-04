@@ -99,7 +99,7 @@ char* soundFileName[] =
 //
 const int buttonDebounceMs = 50;
 const int buttonCount = 3;
-int buttonPin[] = {3, 4, 5};
+int buttonPin[] = {2, 3, 4};
 Bounce button[buttonCount];
 
 //
@@ -124,24 +124,24 @@ char soundCommand[] = {
 void setup() {
   // debug / kwyboard // usb
   setupAudio();
-  
+
   Serial.begin(9600);
 
   // xbee (pin 0 and 1)
   Serial1.begin(9600);
-  
+
   setupMushroomSelection();
   setupButtons();
-  
+
   return;
 }
 
 void setupAudio() {
-  
-// said this is needed for simultaneous cd card access
+
+  // said this is needed for simultaneous cd card access
   //AudioNoInterrupts();
 
-   AudioMemory(8);
+  AudioMemory(8);
   sgtl5000_1.enable();
   sgtl5000_1.volume(0.5);
 
@@ -153,38 +153,43 @@ void setupAudio() {
       delay(500);
     }
   }
-  mixer1.gain(0, 0.1);
+  mixer1.gain(0, 0.3);
   mixer1.gain(1, 0.3);
   mixer1.gain(2, 0.3);
-  mixer1.gain(3, 0.1);
+  mixer1.gain(3, 0.3);
   mixer2.gain(0, 0.3);
   mixer2.gain(1, 0.3);
   mixer2.gain(2, 0.3);
-  mixer2.gain(3, 0.1);
+  mixer2.gain(3, 0.3);
   mixer3.gain(0, 0.3);
   mixer3.gain(1, 0.3);
   mixer3.gain(2, 0.3);
-  mixer3.gain(3, 0.1);
+  mixer3.gain(3, 0.3);
   mixer4.gain(0, 0.3);
   mixer4.gain(1, 0.3);
   mixer4.gain(2, 0.3);
-  mixer4.gain(3, 0.1);
-  mixer5.gain(0, 0.5);
+  mixer4.gain(3, 0.3);
+  mixer5.gain(0, 0.6);
 }
 
 void loop() {
-
-   if (playSdWav13.isPlaying() == false) {
-    Serial.println("Start playing 1");
-    playSdWav13.play("BackTr2.wav");
-  } 
+  triggerBackingTrack();
   triggerXbeeActions();
   triggerButtonActions();
   triggerKeyboardActions();
 }
 
 
-// listening for commands from other mushrooms 
+void triggerBackingTrack() {
+
+  if (playSdWav13.isPlaying() == false) {
+    Serial.println("Start playing 1");
+    playSdWav13.play("BackTr2.wav");
+  }
+
+}
+
+// listening for commands from other mushrooms
 void triggerXbeeActions() {
 
   if (Serial1.available() > 0) {
@@ -216,13 +221,13 @@ void triggerButtonActions() {
 }
 
 
-// using serial monitor (keypresses) to simulate mushrooms 
+// using serial monitor (keypresses) to simulate mushrooms
 void triggerKeyboardActions() {
 
   if (Serial.available() > 0) {
     char inChar = (char)Serial.read();
     log("keyboard command: " + inChar);
-    sendAndPlay(getSound(inChar));  
+    sendAndPlay(getSound(inChar));
   }
 
   return;
@@ -251,7 +256,7 @@ void sendAndPlay(char command) {
   playSound(command);
 
   return;
-  
+
 }
 
 // plays sound files, if given valid serial commands
@@ -286,7 +291,7 @@ char* parseSoundCommand(char command) {
   if (sound == -1) {
     //if error
     return soundFileName[errorSound];
-    
+
   }
 
   return soundFileName[sound];
@@ -342,10 +347,10 @@ void setupMushroomSelection() {
 }
 
 void setupButtons() {
-  
+
   for (int i = 0; i < buttonCount; i++ ) {
     pinMode(buttonPin[i], INPUT_PULLUP);
-    button[i] = Bounce(buttonPin[i], buttonDebounceMs); 
+    button[i] = Bounce(buttonPin[i], buttonDebounceMs);
   }
 
   return;

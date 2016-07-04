@@ -171,18 +171,22 @@ void setupAudio() {
   mixer4.gain(3, 0.1);
   mixer5.gain(0, 0.5);
 }
-
 void loop() {
-
-   if (playSdWav13.isPlaying() == false) {
-    Serial.println("Start playing 1");
-    playSdWav13.play("BackTr3.wav");
-  } 
+  triggerBackingTrack();
   triggerXbeeActions();
   triggerButtonActions();
   triggerKeyboardActions();
 }
 
+
+void triggerBackingTrack() {
+
+  if (playSdWav13.isPlaying() == false) {
+    Serial.println("Start playing 1");
+    playSdWav13.play("BackTr2.wav");
+  }
+
+}
 
 // listening for commands from other mushrooms 
 void triggerXbeeActions() {
