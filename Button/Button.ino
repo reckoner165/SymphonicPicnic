@@ -10,9 +10,7 @@ int ledPin[] = {16, 17, 8};
 void setup() {
   setupButtons();
   setupLeds();
-  for (int i = 0; i < buttonCount; i++) {
-    digitalWrite(ledPin[i], LOW);
-  }
+
   return;
 }
 
@@ -46,6 +44,7 @@ void setupButtons() {
 void setupLeds() {
   for (int i = 0; i < buttonCount; i++) {
     pinMode(ledPin[i], OUTPUT);
+    digitalWrite(ledPin[i], LOW);
   }
   return;
 }
