@@ -102,12 +102,13 @@ const int buttonCount = 3;
 int buttonPin[] = {2, 3, 4};
 Bounce button[buttonCount];
 
+int ledPin[] = {16, 17, 8};
+
 //
 // mushroom selection
 //
 int mushroomCount = 4;
 int mushroomSelectorPin[] = { 20, 21, A10, A11 };
-
 
 //
 // sound mapping - first "row" is mushroom 0
@@ -132,6 +133,8 @@ void setup() {
 
   setupMushroomSelection();
   setupButtons();
+  setupLeds();
+
 
   return;
 }
@@ -203,20 +206,22 @@ void triggerXbeeActions() {
 
 // mushroom buttons pressed -> play file -> send serial command via Xbee
 void triggerButtonActions() {
-  // update debouncers
-  for (int i = 0; i < buttonCount; i++ ) {
+
+  for (int i = 0; i < buttonCount; i++) {
+    // update debouncers
     button[i].update();
-  }
-
-  // update debouncers
-  for (int i = 0; i < buttonCount; i++ ) {
-    if (button[i].fallingEdge()) {
+    if (button[i].risingEdge()) { // using rising edge because buttons are wired at NC
       // DO THE BUTTON PRESS ACTION
+      // PLAY CLIP
       sendAndPlay(i);
+      // TURN LED ON
+      digitalWrite(ledPin[i], HIGH);
+      Serial.print("button ");
+      Serial.println(i);
+      delay(50);
+      digitalWrite(ledPin[i], LOW);
     }
-
   }
-
   return;
 }
 
@@ -347,12 +352,18 @@ void setupMushroomSelection() {
 }
 
 void setupButtons() {
-
   for (int i = 0; i < buttonCount; i++ ) {
     pinMode(buttonPin[i], INPUT_PULLUP);
     button[i] = Bounce(buttonPin[i], buttonDebounceMs);
   }
+  return;
+}
 
+void setupLeds() {
+  for (int i = 0; i < buttonCount; i++) {
+    pinMode(ledPin[i], OUTPUT);
+    digitalWrite(ledPin[i], LOW);
+  }
   return;
 }
 
