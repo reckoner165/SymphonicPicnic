@@ -108,7 +108,7 @@ int ledPin[] = {16, 17, 8};
 // mushroom selection
 //
 int mushroomCount = 4;
-int mushroomSelectorPin[] = { 20, 21, A10, A11 };
+int mushroomSelectorPin[] = { 20, 21 };
 
 //
 // sound mapping - first "row" is mushroom 0
@@ -176,10 +176,13 @@ void setupAudio() {
 }
 
 void loop() {
+  
   triggerBackingTrack();
   triggerXbeeActions();
   triggerButtonActions();
   triggerKeyboardActions();
+  //Serial.println (getMushroom());
+  //delay(100);
 }
 
 
@@ -216,8 +219,8 @@ void triggerButtonActions() {
       sendAndPlay(i);
       // TURN LED ON
       digitalWrite(ledPin[i], HIGH);
-      Serial.print("button ");
-      Serial.println(i);
+      log("button ");
+      log(String(i));
       delay(50);
       digitalWrite(ledPin[i], LOW);
     }
@@ -231,7 +234,8 @@ void triggerKeyboardActions() {
 
   if (Serial.available() > 0) {
     char inChar = (char)Serial.read();
-    log("keyboard command: " + inChar);
+    log("keyboard command: ");
+    log(inChar);
     sendAndPlay(getSound(inChar));
   }
 
@@ -255,7 +259,8 @@ void sendAndPlay(char command) {
   Serial1.print(command);
   Serial1.flush();
 
-  log("sending :" + command);
+  log("sending :");
+  log(command);
 
   // react
   playSound(command);
@@ -270,7 +275,8 @@ void playSound(char command) {
 
   log("Got serial command");
   char* soundFileName = parseSoundCommand(command);
-  log("Got file : " + String(soundFileName));
+  log("Got file : ");
+  log(soundFileName);
   playfile(soundFileName);
   return;
 
@@ -284,7 +290,8 @@ int getSound(char command) {
     }
   }
 
-  log("bad key:" + command);
+  log("bad key:");
+  log(command);
   return -1;
 }
 
@@ -306,7 +313,9 @@ char* parseSoundCommand(char command) {
 void log (String message) {
 
   if (DEBUG) {
-    Serial.println(getMushroom() + " " + message);
+    Serial.print(getMushroom());
+    Serial.print(" ");
+    Serial.println(message);
   }
 
   return;
@@ -317,16 +326,13 @@ void log (String message) {
 void playfile(char * filename) {
 
   // i did it!
-  log("-device:" + String(getMushroom()) + " playing: " + String(filename));
+  //log("-device:" + String(getMushroom()) + " playing: " + String(filename));
   playSdWav1.play(filename);
 
 
   return;
 
 }
-
-
-
 
 char getSoundCommand(int buttonId) {
   int sound = buttonId + getMushroom() * buttonCount;
@@ -335,13 +341,33 @@ char getSoundCommand(int buttonId) {
 
 
 int getMushroom() {
+  /*
   for (int i = 0; i < mushroomCount; i++ ) {
     if (LOW == digitalRead(mushroomSelectorPin[i]))
       return i;
-  }
+  }*/
+  boolean D_ON = false == digitalRead(mushroomSelectorPin[0]); // HIGH LOW is switched around on board ie. LOW is ON
+  boolean C_ON = false == digitalRead(mushroomSelectorPin[1]);
 
+  return D_ON | C_ON << 1 ;
+
+  // mushroom 0 is when all off !C_ON && !D_ON 
+  // mushroom 1 is when only D_ON 
+  // mushroom 2 is when only C_ON 
+  // mushroom 3 is when D_ON && C_ON  
+  
+  /*
+  if ( ! D_ON && C_ON )
+     return 0;
+  if (HIGH == digitalRead(mushroomSelectorPin[0]) && LOW == digitalRead(mushroomSelectorPin[1]))
+     return 1;
+  if (LOW == digitalRead(mushroomSelectorPin[0]) && LOW == digitalRead(mushroomSelectorPin[1]))
+     return 2;
+  if (HIGH == digitalRead(mushroomSelectorPin[0]) && HIGH == digitalRead(mushroomSelectorPin[1]))
+      return 3;
+      
   log("No Mushroom Selected!");
-  return -1;
+  return -1;*/
 }
 
 void setupMushroomSelection() {
