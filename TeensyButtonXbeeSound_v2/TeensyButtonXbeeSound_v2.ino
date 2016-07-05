@@ -72,7 +72,7 @@ AudioPlaySdWav sdWavArray[] = {
 // button debounce lib
 #include <Bounce2.h>
 
-#define DEBUG false
+#define DEBUG true
 
 int maxSounds = 12;
 int errorSound = 12;
