@@ -277,7 +277,7 @@ void sendAndPlay(char command) {
   // react
   playSound(command);
 
-  //delay(1000);
+  //qazdelay(1000);
   Serial1.write(command);
   //Serial1.flush();
 
