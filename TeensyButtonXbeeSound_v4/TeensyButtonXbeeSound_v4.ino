@@ -107,8 +107,8 @@ Bounce button[buttonCount];
 //
 const int ledPin[] = {16, 17, 8};
 int ledState = LOW;
-unsigned long ledStartMillis[] = {0, 0, 0};
-unsigned long blinkInterval = 100;
+long previousMillis = 0;
+long ledOnTime = 50;
 
 //
 // mushroom selection
@@ -185,13 +185,8 @@ void loop() {
   triggerXbeeActions();
   triggerButtonActions();
   triggerKeyboardActions();
-  
-  // turns led off after the set interval
-  for (int i = 0; i < buttonCount; i++) {
-  if (millis() - ledStartMillis[i] > blinkInterval) {
-    digitalWrite(ledPin[i], LOW);
-    }
-  }
+  //Serial.println (getMushroom());
+  //delay(100);
 }
 
 
@@ -209,10 +204,6 @@ void triggerXbeeActions() {
 
   if (Serial1.available() > 0) {
     char inChar = (char)Serial1.read();
-    // quick indication that button pressed from other mushroom
-    for (int i = 0; i < buttonCount; i++) {
-    digitalWrite(ledPin[i],HIGH);
-    }
     playSound(inChar);
   }
 
@@ -230,7 +221,7 @@ void triggerButtonActions() {
       // PLAY CLIP
       sendAndPlay(i);
       // TURN LED ON
-      turnOnLeds(i);
+      blinkLeds(i);
     }
   }
   return;
@@ -263,17 +254,14 @@ void sendAndPlay(int buttonNumber) {
 // sending serial command to other Xbees + play file
 void sendAndPlay(char command) {
 
- 
+  Serial1.print(command);
+  Serial1.flush();
+
   log("sending :" + String(command));
   //log(String(command));
 
   // react
   playSound(command);
-
-  //delay(1000);
-  Serial1.print(command);
-  Serial1.flush();
-
   return;
 }
 
@@ -289,20 +277,6 @@ void playSound(char command) {
 
 }
 
-// parse command message
-int getSound(char command) {
-  for (int i = 0; i < soundCommandCount; i++) {
-    if (soundCommand[i] == command) {
-      return i;
-    }
-  }
-
-  log("bad key:");
-  log(command);
-  return -1;
-}
-
-
 // return sound filename for give command
 char* parseSoundCommand(char command) {
   log("parseSoundCommand");
@@ -316,6 +290,18 @@ char* parseSoundCommand(char command) {
   return soundFileName[sound];
 }
 
+// parse command message
+int getSound(char command) {
+  for (int i = 0; i < soundCommandCount; i++) {
+    if (soundCommand[i] == command) {
+      return i;
+    }
+  }
+
+  log("bad key:" + String(command));
+  return -1;
+}
+
 void playfile(char * filename) {
 
   // i did it!
@@ -323,7 +309,7 @@ void playfile(char * filename) {
   //log(String(getMushroom()));
   log("playing: " + String(filename));
   log(" ");
-  playSdWav2.play(filename);
+  playSdWav1.play(filename);
   return;
 
 }
@@ -375,13 +361,19 @@ void setupLeds() {
   return;
 }
 
-void turnOnLeds(int buttonId){
-  ledStartMillis[buttonId] = millis();
-  ledState = HIGH;
-  digitalWrite(ledPin[buttonId], ledState);
-  log("button " + String(buttonId));
-  log(" ");
-  return;
+void blinkLeds(int buttonId){
+
+      unsigned long currentMillis = millis();
+      ledState = HIGH;
+      if (millis() - currentMillis > ledOnTime) {
+        ledState = LOW;
+      }
+      digitalWrite(ledPin[buttonId], ledState);
+      log("button " + String(buttonId));
+      log(" ");
+      //delay(50);
+      //digitalWrite(ledPin[i], LOW);
+      return;
 }
 
 
