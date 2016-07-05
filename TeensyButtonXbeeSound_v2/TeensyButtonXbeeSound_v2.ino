@@ -72,7 +72,7 @@ AudioPlaySdWav sdWavArray[] = {
 // button debounce lib
 #include <Bounce2.h>
 
-#define DEBUG true
+#define DEBUG false
 
 int maxSounds = 12;
 int errorSound = 12;
@@ -97,7 +97,7 @@ char* soundFileName[] =
 //
 // buttons
 //
-const int buttonDebounceMs = 50;
+const int buttonDebounceMs = 30;
 const int buttonCount = 3;
 int buttonPin[] = {2, 3, 4};
 Bounce button[buttonCount];
@@ -326,7 +326,10 @@ void log (String message) {
 void playfile(char * filename) {
 
   // i did it!
-  //log("-device:" + String(getMushroom()) + " playing: " + String(filename));
+  log("-device:"); 
+  log(String(getMushroom()));
+  log("playing: "); 
+  log(String(filename));
   playSdWav1.play(filename);
 
 
