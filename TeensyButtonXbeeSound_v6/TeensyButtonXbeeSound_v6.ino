@@ -14,18 +14,18 @@
 #include <SerialFlash.h>
 
 // GUItool: begin automatically generated code
-AudioPlaySdWav           playSdWav9;     //xy=212,456
-AudioPlaySdWav           playSdWav11;    //xy=217,534
-AudioPlaySdWav           playSdWav6;     //xy=220,341
-AudioPlaySdWav           playSdWav7;     //xy=220,375
-AudioPlaySdWav           playSdWav10;    //xy=220,496
-AudioPlaySdWav           playSdWav12;    //xy=220,568
+AudioPlaySdWav           playSdWav1;     //xy=230,147
 AudioPlaySdWav           playSdWav2;     //xy=225,183
-AudioPlaySdWav           playSdWav8;     //xy=225,410
 AudioPlaySdWav           playSdWav3;     //xy=227,221
 AudioPlaySdWav           playSdWav4;     //xy=227,256
 AudioPlaySdWav           playSdWav5;     //xy=228,307
-AudioPlaySdWav           playSdWav1;     //xy=230,147
+AudioPlaySdWav           playSdWav6;     //xy=220,341
+AudioPlaySdWav           playSdWav7;     //xy=220,375
+AudioPlaySdWav           playSdWav8;     //xy=225,410
+AudioPlaySdWav           playSdWav9;     //xy=212,456
+AudioPlaySdWav           playSdWav10;    //xy=220,496
+AudioPlaySdWav           playSdWav11;    //xy=217,534
+AudioPlaySdWav           playSdWav12;    //xy=220,568
 AudioPlaySdWav           playSdWav13;    //xy=279,619
 AudioMixer4              mixer1;         //xy=433,178
 AudioMixer4              mixer2;         //xy=439,327
@@ -270,16 +270,17 @@ void sendAndPlay(int buttonNumber) {
 // sending serial command to other Xbees + play file
 void sendAndPlay(char command) {
 
-  
+  playSound(command);
+  delay(random(1000)); // randomize the clicking 
   Serial1.write(command);
   Serial1.flush();
   log("sending :" + String(command));
-  delay(1000);
+  
   
    //log(String(command));
 
   // react
-  playSound(command);
+
 
   //qazdelay(1000);
   
