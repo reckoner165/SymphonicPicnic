@@ -7,8 +7,6 @@
 //  - OshPark boards : https://oshpark.com/shared_projects/lgvLRQTg
 
 
-
-
 #include <Audio.h>
 #include <Wire.h>
 #include <SPI.h>
@@ -76,8 +74,8 @@ char* soundFileName[] =
   "FireR.wav",
   "Birds.wav",
   "Lava.wav",
-  "Forest.wav",
-  "River.wav",
+  "ThunderS.wav",
+  "Swamp.wav",
   "error.wav"
 };
 
