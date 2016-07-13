@@ -97,7 +97,7 @@ char* soundFileName[] =
 //
 // buttons
 //
-const int buttonDebounceMs = 50;
+const int buttonDebounceMs = 30;
 const int buttonCount = 3;
 int buttonPin[] = {2, 3, 4};
 Bounce button[buttonCount];
@@ -369,10 +369,8 @@ void playfile(char * filename) {
   log(" ");
   if (!playSdWav1.isPlaying()){
   playSdWav1.play(filename);
-  log ("playing1");
   } else {
     playSdWav2.play(filename);
-    log("playing2");
   } 
   
   return;
